@@ -7,108 +7,69 @@
  */
 
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+import {StyleSheet,View, Text,Image} from 'react-native';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import HomeScreen from './src/page/bottom/HomeScreen';
+import HealthScreen from './src/page/bottom/HealthScreen';
+import ServiceScreen from './src/page/bottom/ServiceScreen';
+import MineScreen from './src/page/bottom/MineScreen';
+import DetailScreen from './src/page/DetailScreen';
+import HomeStackScreen from './src/page/HomeStackScreen';
+
+const Tab = createBottomTabNavigator();
+
 
 const App: () => React$Node = () => {
-  return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
-  );
+    return (
+        <NavigationContainer>
+            <Tab.Navigator
+                screenOptions={({route}) => ({
+                    tabBarIcon: ({focused, color, size}) => {
+                        let iconName;
+                        if (route.name === 'Home') {
+                            iconName = focused ? require('./images/home_select.png') : require('./images/home_normal.png');
+                        }else if (route.name === 'Health') {
+                               iconName = focused ? require('./images/health_select.png') : require('./images/health_normal.png');
+                        }else if (route.name === 'Service') {
+                               iconName = focused ? require('./images/service_select.png') : require('./images/service_normal.png');
+                        }else if (route.name === 'Mine') {
+                               iconName = focused ? require('./images/mine_select.png') : require('./images/mine_normal.png');
+                        }
+
+                        return <Image style={styles.tabBarIcon} source={iconName}/>
+
+                    },
+                })}
+                tabBarOptions={
+                    {
+                        activeTintColor:'#2CB49D',
+                        inactiveTintColor:'#606060',
+                    }
+
+                }
+            >
+                <Tab.Screen name="Home" component={HomeStackScreen} options={{title: '首页',tabBarBadge:2}}/>
+                <Tab.Screen name="Health" component={HealthScreen}/>
+                <Tab.Screen name="Service" component={ServiceScreen}/>
+                <Tab.Screen name="Mine" component={MineScreen}/>
+            </Tab.Navigator>
+        </NavigationContainer>
+    );
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
+    container: {  // 整个容器
+        flex: 1,
+    },
+    tabBarIcon:{  // tab icon
+        width:19,
+        height:19,
+    }
 });
+
 
 export default App;
